@@ -114,9 +114,9 @@ if [[ -d $WORKING_DIR ]]; then
   log "If you continue all contents of the directory will be deleted with!"
   log "rm -rf ${WORKING_DIR:?}/*"
   log_only "Are you sure you want to contine?[y/N]"
-  read -rp "Are you sure you want to contine?[y/N]" user_confirm
+  read -rp "Are you sure you want to contine?[y/N]" user_confirm_deletion
 
-  case $user_confirm in
+  case $user_confirm_deletion in
   [Yy]*)
     log "Clearing working directory"
     run rm -rf "${WORKING_DIR:?}/"*
@@ -203,9 +203,9 @@ while true; do
   log "  - Exits without downloading anything    : N/n"
   log "----------------------------------"
   log_only "Do you want to contine?[Y/k/d/n]"
-  read -rp "Do you want to contine?[Y/k/d/n] " user_confirm='y'
+  read -rp "Do you want to contine?[Y/k/d/n] " user_select_option
 
-  case $user_confirm in
+  case "${user_select_option:=y}" in
   [Yy]*)
     log "Beginning download and extraction of archives with clean up to $WORKING_DIR"
     break
