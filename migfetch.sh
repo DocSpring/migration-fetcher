@@ -234,7 +234,6 @@ done
 
 jq_opts='.batches[] | .parts[]'
 run_quiet jq -r "$jq_opts" "$INDEX_JSON_FILE_PATH" | while read -r url; do
-  # if [[ $MIGRATION_FILENAME =~ (mig_[^.]+) ]]; then
   if [[ $url =~ (mbp_[^.]+) ]]; then
     part_id="${BASH_REMATCH[1]}"
     filename="$WORKING_DIR/$part_id.tar.gz"
