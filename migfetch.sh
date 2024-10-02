@@ -1,12 +1,4 @@
 #! /bin/bash
-MIGRATION_FILE_INPUT=$1
-DOWNLOAD_DIR_INPUT=$2
-
-DEBUG="false"
-INPUT_FILE_TYPE='invalid'
-EXTRACT_ARCHIVES='true'
-DELETE_ARCHIVES='true'
-LOG_FILE=$DOWNLOAD_DIR_INPUT/account-migration.log
 
 # Helper functions
 function blank() {
@@ -59,7 +51,24 @@ function abspath() {
   fi
 }
 
-log '### MIGRATION FETCH START ###'
+CURRENT_DIR="$(realpath "$(dirname "$0")")"
+
+MIGRATION_FILE_INPUT=$1
+DOWNLOAD_DIR_INPUT=$2
+
+if [[ -n "$DOWNLOAD_DIR_INPUT" ]]; then
+  LOG_FILE=$DOWNLOAD_DIR_INPUT/account-migration.log
+else
+  DOWNLOAD_DIR_INPUT="$CURRENT_DIR/downloads"
+  LOG_FILE="$CURRENT_DIR/account-migration.log"
+fi
+
+DEBUG="false"
+INPUT_FILE_TYPE='invalid'
+EXTRACT_ARCHIVES='true'
+DELETE_ARCHIVES='true'
+
+
 if [[ -z "$MIGRATION_FILE_INPUT" ]]; then
   log "No migration file defined"
   exit 1
@@ -79,10 +88,7 @@ if [[ $INPUT_FILE_TYPE == 'invalid' ]]; then
   exit 1
 fi
 
-if [[ -z "$DOWNLOAD_DIR_INPUT" ]]; then
-  log "Specify a download directory to continue"
-  exit 1
-fi
+log '### MIGRATION FETCH START ###'
 
 # Determine absolute paths for inputs
 MIGRATION_FILE_PATH=$(abspath "$MIGRATION_FILE_INPUT")
@@ -174,10 +180,6 @@ submissions_count=$(jq -r ".submissions_count" "$INDEX_JSON_FILE_PATH")
 combined_submissions_count=$(jq -r ".combined_submissions_count" "$INDEX_JSON_FILE_PATH")
 
 log "# Selected index is a $migration_type migration with:"
-if ((accounts_count > 0)); then
-  log "  - $accounts_count accounts"
-fi
-
 if ((accounts_count > 0)); then
   log "  - $accounts_count accounts"
 fi
